@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tool Acknowledgment Form</title>
+    <!-- The style.css file allows you to change the look of your web pages.
+         If you include the next line in all your web pages, they will all share the same look.
+         This makes it easier to make new pages for your site. -->
+    <link href="/style.css" rel="stylesheet" type="text/css" media="all">
+  </head>
+  <body>
+    <p><div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 20px; max-width: 600px;">
+    <h2 style="text-align: center; color: #333;">AI Tool Acknowledgment Form</h2>
+    <form id="aiForm" style="margin-bottom: 20px; background-color: #f7f7f7; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <div style="margin-bottom: 15px;">
+            <label for="name" style="display: block; margin-bottom: 5px; color: #555;">Your Name:</label>
+            <input type="text" id="name" placeholder="Enter your name" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;" required>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; color: #555;">AI Tools Used:</label>
+            <div id="toolCheckboxes" style="margin-bottom: 10px;">
+                <label><input type="checkbox" name="toolName" value="ChatGPT" data-link="https://openai.com/chatgpt" onclick="updateToolLinks()"> ChatGPT</label>
+                <label><input type="checkbox" name="toolName" value="DALL-E" data-link="https://openai.com/dall-e" onclick="updateToolLinks()"> DALL-E</label>
+                <label><input type="checkbox" name="toolName" value="Midjourney" data-link="https://www.midjourney.com" onclick="updateToolLinks()"> Midjourney</label>
+                <label><input type="checkbox" name="toolName" value="Stable Diffusion" data-link="https://stability.ai" onclick="updateToolLinks()"> Stable Diffusion</label>
+                <label><input type="checkbox" name="toolName" value="GitHub Copilot" data-link="https://github.com/features/copilot" onclick="updateToolLinks()"> GitHub Copilot</label>
+                <label><input type="checkbox" name="toolName" value="Claude.ai" data-link="https://claude.ai" onclick="updateToolLinks()"> Claude.ai</label>
+                <label><input type="checkbox" name="toolName" value="Other" onclick="toggleOtherToolInput()"> Other</label>
+            </div>
+            <input type="text" id="otherTool" placeholder="Specify other tool" style="display: none; width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label for="toolLinks" style="display: block; margin-bottom: 5px; color: #555;">AI Tool Website Links:</label>
+            <input type="text" id="toolLinks" placeholder="Enter links to the tool websites" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label for="taskDescription" style="display: block; margin-bottom: 5px; color: #555;">Task Description:</label>
+            <textarea id="taskDescription" placeholder="Describe the task, e.g., generating this form" rows="3" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; resize: vertical;" required></textarea>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label for="prompts" style="display: block; margin-bottom: 5px; color: #555;">List of Prompts to Share:</label>
+            <textarea id="prompts" placeholder="Prompts used, e.g., 'Create a form that acknowledges AI tool usage'" rows="3" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; resize: vertical;" required></textarea>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label for="outputUsage" style="display: block; margin-bottom: 5px; color: #555;">Explanation of Output Usage:</label>
+            <textarea id="outputUsage" placeholder="Explain how the output was used" rows="3" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; resize: vertical;" required></textarea>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label for="date" style="display: block; margin-bottom: 5px; color: #555;">Date of Use:</label>
+            <input type="date" id="date" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;" required>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label for="documentationLink" style="display: block; margin-bottom: 5px; color: #555;">Link to Shared Chat or Documentation (Optional):</label>
+            <input type="url" id="documentationLink" placeholder="Enter link to shared chat or documentation" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+    <label>
+        <input type="checkbox" id="cc0Checkbox" checked> I acknowledge that the output is released under a <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" style="color: #007bff;">CC0 license</a>. AI-generated outputs cannot be copyrighted according to the <a href="https://www.copyright.gov/ai/">U.S. Copyright Office</a>.
+    </label>
+        </div>
+        <button type="button" onclick="generateAcknowledgment()" style="width: 100%; padding: 10px; background-color: #007bff; color: #fff; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">Generate Acknowledgment</button>
+    </form>
+
+    <div id="acknowledgmentOutput" style="margin-top: 20px; padding: 15px; border: 1px solid #ddd; background-color: #f9f9f9; border-radius: 8px;"></div>
+</div>
+<script>
+
+function updateToolLinks() {
+    const selectedTools = document.querySelectorAll('input[name="toolName"]:checked');
+    const toolLinks = Array.from(selectedTools).map(tool => tool.dataset.link).join(', ');
+    document.getElementById('toolLinks').value = toolLinks;
+}
+
+function toggleOtherToolInput() {
+    document.getElementById('otherTool').style.display = 'block';
+}
+
+function formatDate(dateStr) {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateStr).toLocaleDateString(undefined, options);
+}
+
+function generateAcknowledgment() {
+    const name = document.getElementById('name').value;
+    const toolNames = Array.from(document.querySelectorAll('input[name="toolName"]:checked')).map(tool => tool.value);
+    if (toolNames.includes('Other')) {
+        const otherTool = document.getElementById('otherTool').value || "a specified tool";
+        toolNames.splice(toolNames.indexOf('Other'), 1, otherTool);
+    }
+    const toolLinks = document.getElementById('toolLinks').value;
+    const taskDescription = document.getElementById('taskDescription').value.replace(/\.$/, '');
+    const prompts = document.getElementById('prompts').value.replace(/\.$/, '');
+    const outputUsage = document.getElementById('outputUsage').value.replace(/\.$/, '');
+    const date = formatDate(document.getElementById('date').value);
+    const documentationLink = document.getElementById('documentationLink').value;
+    const isCC0 = document.getElementById('cc0Checkbox').checked;
+
+    const formattedPrompts = prompts.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color: #007bff;">$1</a>');
+
+    let acknowledgment = `
+        <p style="color: #333; line-height: 1.6;">
+            I, ${name}, acknowledge the use of ${toolNames.map(tool => `<a href="${toolLinks}" target="_blank" style="color: #007bff;">${tool}</a>`).join(', ')} on ${date} 
+            for ${taskDescription}. <ul>
+            <li>The prompts used included: ${formattedPrompts}. </li></ul>The output from these prompts was 
+            used ${outputUsage}. ${documentationLink ? `Documentation link: <a href="${documentationLink}" target="_blank" style="color: #007bff;">${documentationLink}</a>` : ''}
+        </p>
+    `;
+
+    if (isCC0) {
+        acknowledgment += `
+            <p style="color: #333; line-height: 1.6;">
+                This output is released under a <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" style="color: #007bff;">CC0 license</a>.  AI-generated works cannot be copyrighted according to the <a href="https://www.copyright.gov/ai/">U.S. Copyright Office</a>.
+            </p>
+        `;
+    }
+
+    document.getElementById('acknowledgmentOutput').innerHTML = acknowledgment;
+}
+</script>
+
+<p>
+
+<div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 20px; max-width: 500px;">
+
+<p>I, Helena Marvin, acknowledge the use of&nbsp;<a href="https://openai.com/chatgpt" target="_blank">ChatGPT</a>&nbsp;on July 29, 2024 for generating this form.</p>
+
+<ul>
+	<li>The prompts used included: I want to build a form with javascript and HTML that helps people acknowledge the use of AI tools, and further conversation.</li>
+</ul>
+
+<p>The output from these prompts was used to create the AI Tool Acknowledgment Form. Documentation link:&nbsp;<a href="https://chatgpt.com/share/e644f6ea-2b38-403d-830c-281fb386b0ed" target="_blank">https://chatgpt.com/share/e644f6ea-2b38-403d-830c-281fb386b0ed</a></p>
+
+<p>This output is released under a&nbsp;<a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank">CC0 license</a>. AI-generated works cannot be copyrighted according to the&nbsp;<a href="https://www.copyright.gov/ai/">U.S. Copyright Office</a>.</p>
+
+</div>
+
+</body>
+</html>
