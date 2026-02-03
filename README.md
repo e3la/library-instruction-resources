@@ -7,6 +7,9 @@ and I am releasing these things as CC0 (public domain) objects folks are allowed
 Other githubs of mine that might be interesting:
 
 **[Libguide ready AI Acknowledgement Generator](https://github.com/e3la/ai-acknowledgement/)
+
 **[Libguide Searchable Table Maker Widget](https://github.com/e3la/LibGuides-Table-Maker)
+
 **[Bookmarklet for getting calendar blocks for days a library is closed](https://github.com/e3la/libcal-bookmarklet)
+
 **[Vibe coded a tool for taking an instagram archive zip and transforming it into bepress ingestible files with metadata in colab](https://github.com/e3la/i2dc)
